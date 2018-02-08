@@ -21,9 +21,6 @@ int main (int argc, char *argv[]) {
     return 1;
   }
   
-  fprintf("How many times would you like to fork?");
-  fgets(n);
-  
   pr_count = 0;
   
   for (i = 1; i < n; i++){
@@ -32,6 +29,7 @@ int main (int argc, char *argv[]) {
       pr_count--;
     }
     if((childpid = fork()) == 0){
+      
       break;
     }
     if(childpid > 0) 

@@ -10,26 +10,32 @@ int main (int argc, char *argv[]) {
   
   
   if (argc != 2) {
-    fprintf(stderr, "%s: Error: Requires exactly one(1) argument", argv[0]);
+    perror ("%s: Error: Requires exactly one(1) argument", argv[0]);
     return 1;
   }
   
   pr_limit = atoi(argv[1]);
   
   if (pr_limit < 1) {
-    fprintf(stderr, "%s: Error: Command line arguement must be a numerical value greater than 0", argv[0]);
+    perror ("%s: Error: Command line arguement must be a numerical value greater than 0", argv[0]);
     return 1;
   }
   
   pr_count = 0;
   
-  for (i = 1; i < n; i++){
+  for (){
     if(pr_count == pr_limit){ 
       wait(NULL);
       pr_count--;
     }
     if((childpid = fork()) == 0){
-      
+      char chFile[MAX_CANON];
+      char chSleep[MAX_CANON];
+      char chLoop[MAX_CANON];
+      fgets(chFile);
+      fgets(chSleep);
+      fgets(chLoop);
+      execvp(chFile, chSleep, chLoop)
       break;
     }
     if(childpid > 0) 

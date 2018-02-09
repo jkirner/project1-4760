@@ -46,7 +46,9 @@ int main (int argc, char *argv[]) {
   pid_t childpid = 0;
   int i, n, pr_limit, pr_count;
   char inbuf[MAX_CANON];
-  
+  char delim = " ";
+  char **myargv;
+   
   if (argc != 2) {
     perror ("%s: Error: Requires exactly one(1) argument", argv[0]);
     return 1;
@@ -67,7 +69,8 @@ int main (int argc, char *argv[]) {
       pr_count--;
     }
     if((childpid = fork()) == 0){
-      execvp(inbuf);
+      makeargv(inbuf, delim, &myargv);
+      execvp(myargv[0], myargv);
       break;
     }
     if(childpid > 0) 

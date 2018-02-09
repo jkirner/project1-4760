@@ -23,7 +23,7 @@ int main (int argc, char *argv[]) {
   
   pr_count = 0;
   
-  for (){
+  while (){
     if(pr_count == pr_limit){ 
       wait(NULL);
       pr_count--;

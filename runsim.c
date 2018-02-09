@@ -3,11 +3,49 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
+int makeargv(char *s, char *delimiters, char ***argvp)
+{
+   char *t;
+   char *snew;
+   int numtokens;
+   int i;
+    /* snew is real start of string after skipping leading delimiters */
+   snew = s + strspn(s, delimiters);
+                              /* create space for a copy of snew in t */
+   if ((t = calloc(strlen(snew) + 1, sizeof(char))) == NULL) {
+      *argvp = NULL;
+      numtokens = -1;
+   } else {                     /* count the number of tokens in snew */
+      strcpy(t, snew);
+      if (strtok(t, delimiters) == NULL)
+         numtokens = 0;
+      else
+         for (numtokens = 1; strtok(NULL, delimiters) != NULL;
+              numtokens++)
+              ;  
+                /* create an argument array to contain ptrs to tokens */
+      if ((*argvp = calloc(numtokens + 1, sizeof(char *))) == NULL) {
+         free(t);
+         numtokens = -1;
+      } else {            /* insert pointers to tokens into the array */
+         if (numtokens > 0) {
+            strcpy(t, snew);
+            **argvp = strtok(t, delimiters);
+            for (i = 1; i < numtokens + 1; i++)
+               *((*argvp) + i) = strtok(NULL, delimiters);
+         } else {
+           **argvp = NULL;
+           free(t);
+         }
+      }
+   }   
+   return numtokens;
+}
 
 int main (int argc, char *argv[]) {
   pid_t childpid = 0;
   int i, n, pr_limit, pr_count;
-  
+  char inbuf[MAX_CANON];
   
   if (argc != 2) {
     perror ("%s: Error: Requires exactly one(1) argument", argv[0]);
@@ -23,19 +61,13 @@ int main (int argc, char *argv[]) {
   
   pr_count = 0;
   
-  while (){
+  while (fgets(inbuf, MAX_CANON, stdin)== NULL){
     if(pr_count == pr_limit){ 
       wait(NULL);
       pr_count--;
     }
     if((childpid = fork()) == 0){
-      char chFile[MAX_CANON];
-      char chSleep[MAX_CANON];
-      char chLoop[MAX_CANON];
-      fgets(chFile);
-      fgets(chSleep);
-      fgets(chLoop);
-      execvp(chFile, chSleep, chLoop)
+      execvp(inbuf);
       break;
     }
     if(childpid > 0) 
